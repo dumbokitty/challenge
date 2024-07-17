@@ -8,7 +8,7 @@ const dataSchema = v.array(
     address: v.string(),
     created: v.string(),
     balance: v.string(),
-  }),
+  })
 );
 
 export type Data = v.Output<typeof dataSchema>;

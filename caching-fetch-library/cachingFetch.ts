@@ -32,7 +32,7 @@ export const useCachingFetch: UseCachingFetch = (url) => {
     data: null,
     isLoading: false,
     error: new Error(
-      'UseCachingFetch has not been implemented, please read the instructions in DevTask.md',
+      'UseCachingFetch has not been implemented, please read the instructions in DevTask.md'
     ),
   };
 };
@@ -53,7 +53,7 @@ export const useCachingFetch: UseCachingFetch = (url) => {
  */
 export const preloadCachingFetch = async (url: string): Promise<void> => {
   throw new Error(
-    'preloadCachingFetch has not been implemented, please read the instructions in DevTask.md',
+    'preloadCachingFetch has not been implemented, please read the instructions in DevTask.md'
   );
 };
 

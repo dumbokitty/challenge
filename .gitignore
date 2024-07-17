@@ -2,4 +2,7 @@
 /node_modules
 
 # production
-/build
+/dist
+
+# mockServer
+/mockServer

@@ -10,7 +10,7 @@ const Name: FC<{ index: number }> = ({ index }) => {
     isLoading,
     error,
   } = useCachingFetch(
-    'https://randomapi.com/api/6de6abfedb24f889e0b5f675edc50deb?fmt=raw&sole&seed=123',
+    'https://randomapi.com/api/6de6abfedb24f889e0b5f675edc50deb?fmt=raw&sole&seed=123'
   );
   if (isLoading) return <div>Loading...</div>;
   if (error || rawData === null) return <div>Error: {error?.message}</div>;
