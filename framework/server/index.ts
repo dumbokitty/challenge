@@ -7,6 +7,7 @@ import { wipeCache } from '../../caching-fetch-library/cachingFetch';
 
 const runServer = async () => {
   // start the msw server
+
   await startMswServer();
 
   const fastify = Fastify({
@@ -14,12 +15,14 @@ const runServer = async () => {
   });
 
   // serve the framwork runtime
+
   const clientJs = fs.readFileSync('./dist/client.js');
   fastify.get('/client.js', async (request, reply) => {
     reply.header('content-type', 'text/javascript').send(clientJs);
   });
 
   // serve the service worker for msw to work in the browser
+
   const mswJs = fs.readFileSync('./dist/mockServiceWorker.js');
   fastify.get('/mockServiceWorker.js', async (request, reply) => {
     reply.header('content-type', 'text/javascript').send(mswJs);

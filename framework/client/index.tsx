@@ -11,7 +11,9 @@ declare global {
 }
 
 const startClient = async () => {
-  await startMswClient();
+  if (process.env.NODE_ENV === 'development') {
+    await startMswClient();
+  }
 
   // If there is initial data, use it to initialize the cache, then clean up
   if (typeof window.__INITIAL_DATA__ === 'string') {
