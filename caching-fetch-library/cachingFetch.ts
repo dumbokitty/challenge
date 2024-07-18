@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 // You may edit this file, add new files to support this file,
 // and/or add new dependencies to the project as you see fit.
 // However, you must not change the surface API presented from this file,
@@ -8,7 +9,8 @@ type UseCachingFetch = (url: string) => {
   data: unknown;
   error: Error | null;
 };
-
+let cache = new Map();
+let serverResult: { [key: string]: any } = {};
 /**
  * 1. Implement a caching fetch hook. The hook should return an object with the following properties:
  * - isLoading: a boolean that is true when the fetch is in progress and false otherwise
@@ -28,12 +30,36 @@ type UseCachingFetch = (url: string) => {
  *
  */
 export const useCachingFetch: UseCachingFetch = (url) => {
+  const [isLoading, setIsloading] = useState(false);
+  const [data, setData] = useState<unknown | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  useEffect(() => {
+    setIsloading(true);
+    setError(null);
+
+    if (cache.has(url)) {
+      setData(cache.get(url));
+      setIsloading(false);
+      setError(null);
+      return;
+    }
+    fetch(url)
+      .then(async (r) => {
+        const d = await r.json();
+        cache.set(url, d);
+        setData(d);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setIsloading(false);
+      });
+  }, []);
   return {
-    data: null,
-    isLoading: false,
-    error: new Error(
-      'UseCachingFetch has not been implemented, please read the instructions in DevTask.md'
-    ),
+    data,
+    isLoading,
+    error,
   };
 };
 
@@ -52,9 +78,17 @@ export const useCachingFetch: UseCachingFetch = (url) => {
  *
  */
 export const preloadCachingFetch = async (url: string): Promise<void> => {
-  throw new Error(
-    'preloadCachingFetch has not been implemented, please read the instructions in DevTask.md'
-  );
+  // throw new Error(
+  //   'preloadCachingFetch has not been implemented, please read the instructions in DevTask.md'
+  // );
+
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    serverResult[url] = d;
+  } catch (error) {
+    throw new Error('preloadCachingFetch failed');
+  }
 };
 
 /**
@@ -73,8 +107,17 @@ export const preloadCachingFetch = async (url: string): Promise<void> => {
  * 4. This file passes a type-check.
  *
  */
-export const serializeCache = (): string => '';
+export const serializeCache = (): string => {
+  return JSON.stringify(serializeCache);
+};
 
-export const initializeCache = (serializedCache: string): void => {};
+export const initializeCache = (serializedCache: string): void => {
+  const incoming = JSON.parse(serializedCache);
+  for (let key of Object.keys(incoming)) {
+    cache.set(key, incoming[key]);
+  }
+};
 
-export const wipeCache = (): void => {};
+export const wipeCache = (): void => {
+  cache = new Map();
+};
